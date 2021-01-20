@@ -1,5 +1,11 @@
 {
     "name": "finzy",
     "version": "0.0.1",
-    "author": "Valentyn Zozulia"
+    "author": {
+        "name": "Valentyn Zozulia",
+        "email": "valikobird@gmail.com"
+    },
+    "description": "Application to manage personal finances.",
+    "keywords": ["home", "finance", "budget"],
+    "license": "MIT"
 }
