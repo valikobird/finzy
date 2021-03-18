@@ -4,7 +4,7 @@ import LoginButton from './LoginButton';
 import LogoutButton from './LogoutButton';
 import Profile from './Profile';
 
-function App() {
+function App(): React.ReactElement {
     const { isAuthenticated, isLoading } = useAuth0();
 
     if (isLoading) {
