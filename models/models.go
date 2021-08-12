@@ -1,9 +1,29 @@
 package models
 
-import "time"
+import (
+	"database/sql"
+	"time"
+)
+
+type DBModel struct {
+	DB *sql.DB
+}
+
+// Models is the wrapper for database
+type Models struct {
+	DB DBModel
+}
+
+// NewModels returns models with db pool
+func NewModels(db *sql.DB) Models {
+	return Models{
+		DB: DBModel{DB: db},
+	}
+}
 
 type Account struct {
 	Id        string    `json:"id"`
+	UserId    string    `json:"user_id"`
 	Title     string    `json:"title"`
 	Currency  string    `json:"currency"`
 	Balance   float64   `json:"balance"`
@@ -30,4 +50,10 @@ type Goal struct {
 	Parts     []AccountPart `json:"-"`
 	CreatedAt time.Time     `json:"created_at"`
 	UpdatedAt time.Time     `json:"updated_at"`
+}
+
+type User struct {
+	Id       string `json:"id"`
+	Email    string `json:"email"`
+	Username string `json:"username"`
 }
