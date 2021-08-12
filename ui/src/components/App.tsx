@@ -46,7 +46,8 @@ export default function App() {
               </Route>
               <Route path="/">
                 <Dashboard />
-                {/*<Signature/>*/}
+                {/*<SignatureEmail />*/}
+                {/*<SignatureMailer />*/}
               </Route>
             </Switch>
           </div>
