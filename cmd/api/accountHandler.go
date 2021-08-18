@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 )
@@ -16,12 +15,23 @@ func (app *application) getOneAccount(w http.ResponseWriter, r *http.Request) {
 
 	err = app.writeJson(w, http.StatusOK, account, "account")
 	if err != nil {
-		app.logger.Print(errors.New("error on writing account to response writer"))
 		app.errorJson(w, err)
 		return
 	}
 }
 
 func (app *application) getAllAccounts(w http.ResponseWriter, r *http.Request) {
+	const UserId = "4646b744-c4c9-42b6-94fa-9971ee8e58d8"
+	accounts, err := app.models.DB.GetAccounts(UserId)
+	if err != nil {
+		app.errorJson(w, err)
+		return
+	}
+
+	err = app.writeJson(w, http.StatusOK, accounts, "accounts")
+	if err != nil {
+		app.errorJson(w, err)
+		return
+	}
 
 }
