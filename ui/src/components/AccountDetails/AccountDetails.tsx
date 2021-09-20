@@ -1,13 +1,13 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { IAccount, IAccountTransactionHistory } from "../../interfaces";
+import React, {Fragment, useEffect, useState} from "react";
+import {useParams} from "react-router-dom";
+import {IAccount, IAccountTransactionHistory} from "../../interfaces";
 import AccountSummary from "./components/AccountSummary";
 import currencyFormatter from "../../shared/currencyFormatter";
 import AccountDiffs from "./components/AccountDiffs";
 import AccountTransactions from "./components/AccountTransactions";
 
-export default function Account() {
-  const { id } = useParams<{ id: string }>();
+export default function AccountDetails() {
+  const {id} = useParams<{ id: string }>();
 
   const [account, setAccount] = useState<IAccount>();
   const [balance, setBalance] = useState<IAccountTransactionHistory>();
@@ -21,7 +21,7 @@ export default function Account() {
         if (response.status !== 200) {
           let err = Error(`Invalid response code: ${response.status}`);
           setError(err);
-          return { account: null };
+          return {account: null};
         } else {
           error && setError(null);
           return response.json();
@@ -75,11 +75,11 @@ export default function Account() {
       </h2>
 
       {account && formatter ? (
-        <AccountSummary account={account} formatter={formatter} />
+        <AccountSummary account={account} formatter={formatter}/>
       ) : null}
 
       {balance && formatter ? (
-        <AccountDiffs diffs={balance.diffByPeriod} formatter={formatter} />
+        <AccountDiffs diffs={balance.diffByPeriod} formatter={formatter}/>
       ) : null}
 
       {balance && formatter ? (

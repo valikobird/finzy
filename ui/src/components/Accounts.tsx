@@ -1,6 +1,6 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { IAccount } from "../interfaces";
+import React, {Fragment, useEffect, useState} from "react";
+import {Link} from "react-router-dom";
+import {IAccount} from "../interfaces";
 import currencyFormatter from "../shared/currencyFormatter";
 
 export default function Accounts() {
@@ -14,14 +14,14 @@ export default function Accounts() {
         if (response.status !== 200) {
           let err = Error(`Invalid response code: ${response.status}`);
           setError(err);
-          return { accounts: [] };
+          return {accounts: []};
         } else {
           error && setError(null);
           return response.json();
         }
       })
       .then((json) => {
-        setAccounts(json.accounts);
+        setAccounts(json.accounts ?? []);
         setIsLoaded(true);
       });
   }, []);
@@ -40,24 +40,24 @@ export default function Accounts() {
 
       <table className="table table-hover">
         <thead>
-          <tr>
-            <th scope="col">Title</th>
-            <th scope="col">Currency</th>
-            <th scope="col">Balance</th>
-          </tr>
+        <tr>
+          <th scope="col">Title</th>
+          <th scope="col">Currency</th>
+          <th scope="col">Balance</th>
+        </tr>
         </thead>
         <tbody>
-          {accounts.map((account) => (
-            <tr key={account.id}>
-              <td>
-                <Link to={`/accounts/${account.id}`}>{account.title}</Link>
-              </td>
-              <td>{account.currency}</td>
-              <td>
-                {currencyFormatter(account.currency).format(account.balance)}
-              </td>
-            </tr>
-          ))}
+        {accounts.map((account) => (
+          <tr key={account.id}>
+            <td>
+              <Link to={`/account/list/${account.id}`}>{account.title}</Link>
+            </td>
+            <td>{account.currency}</td>
+            <td>
+              {currencyFormatter(account.currency).format(account.balance)}
+            </td>
+          </tr>
+        ))}
         </tbody>
       </table>
     </Fragment>

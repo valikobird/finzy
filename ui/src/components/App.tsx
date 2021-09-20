@@ -1,11 +1,13 @@
 import React from "react";
-import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom";
+import {BrowserRouter as Router, Link, Route, Switch} from "react-router-dom";
 import Accounts from "./Accounts";
 import Dashboard from "./Dashboard";
 import AppFooter from "./AppFooter";
-import Account from "./Account";
+import AccountDetails from "./AccountDetails";
 import Goals from "./Goals";
 import Goal from "./Goal";
+import EditAccount from "./EditAccount";
+import CreateAccount from "./CreateAccount";
 
 export default function App() {
   return (
@@ -13,17 +15,20 @@ export default function App() {
       <div className="container">
         <div className="row">
           <h1 className="mt-3">Finzy</h1>
-          <hr className="mb-3" />
+          <hr className="mb-3"/>
         </div>
         <div className="row">
-          <div className="col-md-3">
+          <div className="col-md-3 mb-3">
             <nav>
               <ul className="list-group">
                 <li className="list-group-item">
                   <Link to="/">Dashboard</Link>
                 </li>
                 <li className="list-group-item">
-                  <Link to="/accounts">Accounts</Link>
+                  <Link to="/account/list">Accounts</Link>
+                </li>
+                <li className="list-group-item">
+                  <Link to="/account/create">Add account</Link>
                 </li>
                 <li className="list-group-item">
                   <Link to="/goals">Goals</Link>
@@ -34,26 +39,28 @@ export default function App() {
 
           <div className="col-md-9">
             <Switch>
-              <Route path="/accounts/:id" component={Account} />
-              <Route path="/accounts">
-                <Accounts />
+              <Route path="/account/create">
+                <CreateAccount userId={"2704aed7-e431-4ee1-90d6-465c4f744c61"}/>
+              </Route>
+              <Route path="/account/edit/:id" component={EditAccount}/>
+              <Route path="/account/list/:id" component={AccountDetails}/>
+              <Route path="/account/list">
+                <Accounts/>
               </Route>
               <Route path="/goals/:id">
-                <Goal />
+                <Goal/>
               </Route>
               <Route path="/goals">
-                <Goals />
+                <Goals/>
               </Route>
               <Route path="/">
-                <Dashboard />
-                {/*<SignatureEmail />*/}
-                {/*<SignatureMailer />*/}
+                <Dashboard/>
               </Route>
             </Switch>
           </div>
         </div>
 
-        <AppFooter />
+        <AppFooter/>
       </div>
     </Router>
   );

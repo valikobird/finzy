@@ -1,16 +1,22 @@
 package main
 
 import (
+	"encoding/json"
 	"github.com/julienschmidt/httprouter"
+	"github.com/valikobird/finzy/models"
 	"net/http"
+	"strconv"
 )
+
+type jsonResp struct {
+	OK      bool   `json:"ok"`
+	Message string `json:"message"`
+}
 
 func (app *application) getOneAccount(w http.ResponseWriter, r *http.Request) {
 	params := httprouter.ParamsFromContext(r.Context())
 
 	id := params.ByName("id")
-	app.logger.Println("id is", id)
-
 	account, err := app.models.DB.GetAccount(id)
 
 	err = app.writeJson(w, http.StatusOK, account, "account")
@@ -21,7 +27,7 @@ func (app *application) getOneAccount(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) getAllAccounts(w http.ResponseWriter, r *http.Request) {
-	const UserId = "4646b744-c4c9-42b6-94fa-9971ee8e58d8"
+	const UserId = "2704aed7-e431-4ee1-90d6-465c4f744c61"
 	accounts, err := app.models.DB.GetAccounts(UserId)
 	if err != nil {
 		app.errorJson(w, err)
@@ -33,5 +39,60 @@ func (app *application) getAllAccounts(w http.ResponseWriter, r *http.Request) {
 		app.errorJson(w, err)
 		return
 	}
+}
+
+func (app *application) deleteAccount(w http.ResponseWriter, r *http.Request) {
+
+}
+
+type AccountPayload struct {
+	Id       string `json:"id"`
+	UserId   string `json:"userId"`
+	Title    string `json:"title"`
+	Currency string `json:"currency"`
+	Balance  string `json:"balance"`
+}
+
+func (app *application) createAccount(w http.ResponseWriter, r *http.Request) {
+	var payload AccountPayload
+
+	err := json.NewDecoder(r.Body).Decode(&payload)
+	if err != nil {
+		app.errorJson(w, err)
+		return
+	}
+
+	var account models.Account
+	account.UserId = payload.UserId
+	account.Title = payload.Title
+	account.Currency = payload.Currency
+	account.Balance, err = strconv.ParseFloat(payload.Balance, 64)
+	if err != nil {
+		app.errorJson(w, err)
+		return
+	}
+
+	err = app.models.DB.CreateAccount(account)
+	if err != nil {
+		app.errorJson(w, err)
+		return
+	}
+
+	ok := jsonResp{
+		OK: true,
+	}
+
+	err = app.writeJson(w, http.StatusOK, ok, "response")
+	if err != nil {
+		app.errorJson(w, err)
+		return
+	}
+}
+
+func (app *application) updateAccount(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func (app *application) searchAccount(w http.ResponseWriter, r *http.Request) {
 
 }

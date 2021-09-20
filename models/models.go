@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"github.com/google/uuid"
 	"time"
 )
 
@@ -22,7 +23,7 @@ func NewModels(db *sql.DB) Models {
 }
 
 type Account struct {
-	Id        string    `json:"id"`
+	Id        uuid.UUID `json:"id" sql:"type:uuid"`
 	UserId    string    `json:"user_id"`
 	Title     string    `json:"title"`
 	Currency  string    `json:"currency"`

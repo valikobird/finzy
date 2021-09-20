@@ -73,3 +73,16 @@ func (m *DBModel) GetAccounts(userId string) ([]*Account, error) {
 
 	return accounts, nil
 }
+
+func (m *DBModel) CreateAccount(account Account) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	stmt := `insert into account (user_id, title, currency, balance) values ($1, $2, $3, $4)`
+	_, err := m.DB.ExecContext(ctx, stmt, account.UserId, account.Title, account.Currency, account.Balance)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
