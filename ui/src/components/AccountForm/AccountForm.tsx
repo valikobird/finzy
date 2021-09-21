@@ -4,7 +4,12 @@ import Select from "../form-components/Select";
 import {IAccount} from "../../interfaces";
 import "./AccountForm.css";
 
-export default function AccountForm({id, userId, title, currency, balance}: IAccount) {
+interface IProps {
+  account: IAccount;
+  setAlert: Function;
+}
+
+export default function AccountForm({account: {id, userId, title, currency, balance}, setAlert}: IProps) {
   const [account, setAccount] = useState<IAccount>({
     id,
     userId,
@@ -45,7 +50,17 @@ export default function AccountForm({id, userId, title, currency, balance}: IAcc
       body: JSON.stringify(payload),
     }).then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        if (data.error) {
+          setAlert({
+            type: "alert-danger",
+            message: data.error.message,
+          });
+        } else {
+          setAlert({
+            type: "alert-success",
+            message: "Changes saved!"
+          });
+        }
       });
   };
 
