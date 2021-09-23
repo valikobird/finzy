@@ -37,7 +37,9 @@ export default function Accounts() {
   return (
     <Fragment>
       <h2>Accounts</h2>
-
+      <hr/>
+      <a href={"/account/create"} className={"btn btn-primary"}>Add Account</a>
+      <hr/>
       <table className="table table-hover">
         <thead>
         <tr>

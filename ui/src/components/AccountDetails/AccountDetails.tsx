@@ -1,8 +1,8 @@
 import React, {Fragment, useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {IAccount, IAccountTransactionHistory} from "../../interfaces";
-import AccountSummary from "./components/AccountSummary";
 import currencyFormatter from "../../shared/currencyFormatter";
+import AccountSummary from "./components/AccountSummary";
 import AccountDiffs from "./components/AccountDiffs";
 import AccountTransactions from "./components/AccountTransactions";
 
@@ -60,34 +60,40 @@ export default function AccountDetails() {
     account && setFormatter(currencyFormatter(account.currency));
   }, [account]);
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  if (!isLoaded) {
-    return <p>Loading...</p>;
-  }
-
   return (
     <Fragment>
-      <h2>
-        {account?.title} ({account?.currency})
-      </h2>
+      {error
+        ? <div>Error: {error.message}</div>
+        : !isLoaded
+          ? <p>Loading...</p>
+          : (
+            <Fragment>
+              <h2>{account?.title} ({account?.currency})</h2>
+              <hr/>
+              {account ? (
+                <Fragment>
+                  <a href={`/account/edit/${account?.id}`} className={"btn btn-secondary"}>Edit</a>
+                  <hr/>
+                </Fragment>
+              ) : null}
 
-      {account && formatter ? (
-        <AccountSummary account={account} formatter={formatter}/>
-      ) : null}
+              {account && formatter ? (
+                <AccountSummary account={account} formatter={formatter}/>
+              ) : null}
 
-      {balance && formatter ? (
-        <AccountDiffs diffs={balance.diffByPeriod} formatter={formatter}/>
-      ) : null}
+              {balance && formatter ? (
+                <AccountDiffs diffs={balance.diffByPeriod} formatter={formatter}/>
+              ) : null}
 
-      {balance && formatter ? (
-        <AccountTransactions
-          transactions={balance.transactions}
-          formatter={formatter}
-        />
-      ) : null}
+              {balance && formatter ? (
+                <AccountTransactions
+                  transactions={balance.transactions}
+                  formatter={formatter}
+                />
+              ) : null}
+            </Fragment>
+          )
+      }
     </Fragment>
   );
 }

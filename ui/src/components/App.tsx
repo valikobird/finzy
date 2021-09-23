@@ -28,9 +28,6 @@ export default function App() {
                   <Link to="/account/list">Accounts</Link>
                 </li>
                 <li className="list-group-item">
-                  <Link to="/account/create">Add account</Link>
-                </li>
-                <li className="list-group-item">
                   <Link to="/goals">Goals</Link>
                 </li>
               </ul>
