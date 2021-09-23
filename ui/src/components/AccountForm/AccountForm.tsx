@@ -46,7 +46,7 @@ export default function AccountForm({account: {id, userId, title, currency, bala
     const payload = Object.fromEntries(data.entries());
 
     fetch("http://localhost:4000/v1/account", {
-      method: payload.id !== "" ? "PUT" : "POST",
+      method: "POST",
       body: JSON.stringify(payload),
     }).then((response) => response.json())
       .then((data) => {

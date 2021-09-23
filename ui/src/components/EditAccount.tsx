@@ -1,7 +1,8 @@
 import React, {Fragment, useEffect, useState} from "react";
-import {IAccount} from "../interfaces";
+import {IAccount, IAlert} from "../interfaces";
 import {useParams} from "react-router-dom";
 import AccountForm from "./AccountForm";
+import Alert from "./ui-components/Alert";
 
 export default function EditAccount() {
   const {id} = useParams<{ id: string }>();
@@ -17,6 +18,10 @@ export default function EditAccount() {
   const [account, setAccount] = useState<IAccount>(emptyAccount);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  const [alert, setAlert] = useState<IAlert>({
+    type: "d-none",
+    message: "",
+  });
 
   useEffect(() => {
     if (id) {
@@ -53,9 +58,10 @@ export default function EditAccount() {
           : (
             <Fragment>
               <h2>Edit Account</h2>
+              <Alert type={alert.type} message={alert.message}/>
               <hr/>
               {account.id
-                ? <AccountForm {...account} />
+                ? <AccountForm account={{...account}} setAlert={setAlert}/>
                 : <p>Account not found</p>
               }
             </Fragment>
