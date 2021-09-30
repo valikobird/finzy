@@ -11,6 +11,7 @@ func (app *application) routes() http.Handler {
 	router.HandlerFunc(http.MethodGet, "/status", app.statusHandler)
 
 	router.HandlerFunc(http.MethodPost, "/v1/account", app.editAccount)
+	router.HandlerFunc(http.MethodPost, "/v1/account/delete", app.deleteAccount)
 	router.HandlerFunc(http.MethodGet, "/v1/account/:id", app.getOneAccount)
 	router.HandlerFunc(http.MethodGet, "/v1/accounts", app.getAllAccounts)
 

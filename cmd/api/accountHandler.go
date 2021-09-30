@@ -18,8 +18,17 @@ type jsonResp struct {
 func (app *application) getOneAccount(w http.ResponseWriter, r *http.Request) {
 	params := httprouter.ParamsFromContext(r.Context())
 
-	id, _ := uuid.Parse(params.ByName("id"))
+	id, err := uuid.Parse(params.ByName("id"))
+	if err != nil {
+		app.errorJson(w, err)
+		return
+	}
+
 	account, err := app.models.DB.GetAccount(id)
+	if err != nil {
+		app.errorJson(w, err)
+		return
+	}
 
 	err = app.writeJson(w, http.StatusOK, account, "account")
 	if err != nil {
@@ -43,8 +52,40 @@ func (app *application) getAllAccounts(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (app *application) deleteAccount(w http.ResponseWriter, r *http.Request) {
+type AccountDeletePayload struct {
+	Id string `json:"id"`
+}
 
+func (app *application) deleteAccount(w http.ResponseWriter, r *http.Request) {
+	var payload AccountDeletePayload
+
+	err := json.NewDecoder(r.Body).Decode(&payload)
+	if err != nil {
+		app.errorJson(w, err)
+		return
+	}
+
+	id, err := uuid.Parse(payload.Id)
+	if err != nil {
+		app.errorJson(w, err)
+		return
+	}
+
+	err = app.models.DB.DeleteAccount(id)
+	if err != nil {
+		app.errorJson(w, err)
+		return
+	}
+
+	ok := jsonResp{
+		OK: true,
+	}
+
+	err = app.writeJson(w, http.StatusOK, ok, "response")
+	if err != nil {
+		app.errorJson(w, err)
+		return
+	}
 }
 
 type AccountPayload struct {
