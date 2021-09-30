@@ -1,8 +1,12 @@
-import React, {useState} from "react";
+import React, {Fragment, useState} from "react";
 import Input from "../form-components/Input";
-import Select from "../form-components/Select";
-import {IAccount} from "../../interfaces";
+import {IAccount, IAlert} from "../../interfaces";
 import "./AccountForm.css";
+import Select from "../form-components/Select";
+import {Link} from "react-router-dom";
+import {confirmAlert} from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
+import {useHistory} from "react-router";
 
 interface IProps {
   account: IAccount;
@@ -24,6 +28,7 @@ export default function AccountForm({account: {id, userId, title, currency, bala
   });
 
   const [errors, setErrors] = useState([]);
+  const history = useHistory();
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -56,9 +61,8 @@ export default function AccountForm({account: {id, userId, title, currency, bala
             message: data.error.message,
           });
         } else {
-          setAlert({
-            type: "alert-success",
-            message: "Changes saved!"
+          history.push({
+            pathname: `/account/list/${account.id}`
           });
         }
       });
@@ -80,19 +84,67 @@ export default function AccountForm({account: {id, userId, title, currency, bala
 
   const hasError = (key) => errors.indexOf(key) !== -1;
 
+  const confirmDelete = () => {
+    confirmAlert({
+      title: "Delete account?",
+      message: "Are you sure?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            fetch("http://localhost:4000/v1/account/delete", {
+              method: "POST",
+              body: JSON.stringify({
+                id: account.id,
+              }),
+            }).then((response) => response.json())
+              .then((data) => {
+                if (data.error) {
+                  const alert: IAlert = {
+                    type: "alert-danger",
+                    message: data.error.message,
+                  };
+                  setAlert(alert);
+                } else {
+                  history.push({
+                    pathname: "/account/list"
+                  });
+                }
+              });
+          }
+        },
+        {
+          label: "No",
+          onClick: () => {
+          }
+        }
+      ]
+    });
+  };
+
   return (
     <form onSubmit={handleSubmit}>
-      <input type={"hidden"} name={"id"} id={"id"} defaultValue={account.id}/>
-      <input type={"hidden"} name={"userId"} id={"userId"} defaultValue={account.userId}/>
-      <input type={"hidden"} name={"balance"} id={"balance"} defaultValue={account.balance}/>
-      <Input type={"text"} id={"title"} name={"title"} title={"Title"} value={account.title}
+      <input type="hidden" name="id" id="id" defaultValue={account.id}/>
+      <input type="hidden" name="userId" id="userId" defaultValue={account.userId}/>
+      <input type="hidden" name="balance" id="balance" defaultValue={account.balance}/>
+      <Input type="text" id="title" name="title" title="Title" value={account.title}
              handleChange={handleChange} className={hasError("title") ? "is-invalid" : ""}
-             errorDiv={hasError("title") ? "text-danger" : "d-none"} errorMsg={"Please specify a title"}/>
-      <Select id={"currency"} name={"currency"} title={"Currency"} value={account.currency}
-              handleChange={handleChange} placeholder={"Select a currency"} options={currencyList.inUse}
+             errorDiv={hasError("title") ? "text-danger" : "d-none"} errorMsg="Please specify a title"/>
+      <Select id="currency" name="currency" title="Currency" value={account.currency}
+              handleChange={handleChange} placeholder="Select a currency" options={currencyList.inUse}
               className={hasError("currency") ? "is-invalid" : ""}
-              errorDiv={hasError("currency") ? "text-danger" : "d-none"} errorMsg={"Please select a currency"}/>
-      <button className="btn btn-primary">Save</button>
+              errorDiv={hasError("currency") ? "text-danger" : "d-none"} errorMsg="Please select a currency"/>
+      <div className="d-flex justify-content-between">
+        <button className="btn btn-primary">Save</button>
+        {account.id ? (
+            <Fragment>
+              <a href="#" onClick={confirmDelete} className="btn btn-danger">Delete</a>
+              <Link to={`/account/list/${account.id}`} className="btn btn-secondary ms-2">Cancel</Link>
+            </Fragment>
+          ) :
+          <Link to={`/account/list`} className="btn btn-secondary">Cancel</Link>
+        }
+      < /div>
     </form>
   );
 }

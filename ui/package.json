@@ -1,6 +1,6 @@
 {
   "name": "finzy",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -9,6 +9,7 @@
   "dependencies": {
     "bootstrap": "^5.1.0",
     "react": "^17.0.0",
+    "react-confirm-alert": "^2.7.0",
     "react-dom": "^17.0.0",
     "react-router-dom": "^5.2.0"
   },
